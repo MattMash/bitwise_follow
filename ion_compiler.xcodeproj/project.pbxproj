@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15ABE693223783E00001084F /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 15ABE692223783E00001084F /* main.c */; };
+		15ABE693223783E00001084F /* ion.c in Sources */ = {isa = PBXBuildFile; fileRef = 15ABE692223783E00001084F /* ion.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +24,7 @@
 
 /* Begin PBXFileReference section */
 		15ABE68F223783E00001084F /* ion_compiler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ion_compiler; sourceTree = BUILT_PRODUCTS_DIR; };
-		15ABE692223783E00001084F /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		15ABE692223783E00001084F /* ion.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ion.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 		15ABE691223783E00001084F /* ion_compiler */ = {
 			isa = PBXGroup;
 			children = (
-				15ABE692223783E00001084F /* main.c */,
+				15ABE692223783E00001084F /* ion.c */,
 			);
 			path = ion_compiler;
 			sourceTree = "<group>";
@@ -118,7 +118,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15ABE693223783E00001084F /* main.c in Sources */,
+				15ABE693223783E00001084F /* ion.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
