@@ -23,6 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		150BC72B22422EBA00CF6F2A /* syntax.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = syntax.txt; path = ion_compiler/syntax.txt; sourceTree = "<group>"; };
 		15ABE68F223783E00001084F /* ion_compiler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ion_compiler; sourceTree = BUILT_PRODUCTS_DIR; };
 		15ABE692223783E00001084F /* ion.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ion.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -41,6 +42,7 @@
 		15ABE686223783E00001084F = {
 			isa = PBXGroup;
 			children = (
+				150BC72B22422EBA00CF6F2A /* syntax.txt */,
 				15ABE691223783E00001084F /* ion_compiler */,
 				15ABE690223783E00001084F /* Products */,
 			);
