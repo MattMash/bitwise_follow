@@ -153,6 +153,27 @@ typedef enum TokenKind {
     TOKEN_FLOAT,
     TOKEN_STR,
     TOKEN_NAME,
+    TOKEN_INC,
+    TOKEN_DEC,
+    TOKEN_LSHIFT,
+    TOKEN_RSHIFT,
+    TOKEN_EQ,
+    TOKEN_NOTEQ,
+    TOKEN_LTEQ,
+    TOKEN_GTEQ,
+    TOKEN_AND,
+    TOKEN_OR,
+    TOKEN_ADD_ASSIGN,
+    TOKEN_SUB_ASSIGN,
+    TOKEN_COLON_ASSIGN,
+    TOKEN_OR_ASSIGN,
+    TOKEN_AND_ASSIGN,
+    TOKEN_XOR_ASSIGN,
+    TOKEN_LSHIFT_ASSIGN,
+    TOKEN_RSHIFT_ASSIGN,
+    TOKEN_MUL_ASSIGN,
+    TOKEN_DIV_ASSIGN,
+    TOKEN_MOD_ASSIGN
 } TokenKind;
 
 typedef enum TokenMod {
@@ -289,14 +310,19 @@ uint64_t scan_int() {
         if (tolower(*stream) == 'x') {
             stream++;
             base = 16;
+            token.mod = TOKENMOD_HEX;
         } else if (*stream == 'b') {
             stream++;
             base = 2;
+            token.mod = TOKENMOD_BIN;
         }  else if (isdigit(*stream)) {
             base = 8;
+            token.mod = TOKENMOD_OCT;
         } else {
-            syntax_error("Invalid interger literal suffix '%c'", *stream);
-            stream++;
+            token.kind = TOKEN_INT;
+            token.int_val = 0;
+            base = 10;
+            return 0;
         }
     }
     
@@ -395,6 +421,27 @@ void scan_str() {
     token.str_val = str;
 }
 
+#define CASE1(c, c1, k1) \
+case c: \
+token.kind = *stream++; \
+if (*stream == c1) { \
+token.kind = k1; \
+stream++;\
+}\
+break;
+
+#define CASE2(c, c1, k1, c2, k2) \
+case c: \
+token.kind = *stream++; \
+if (*stream == c1) { \
+token.kind = k1; \
+stream++;\
+} else if (*stream == c2) { \
+token.kind = k2; \
+stream++; \
+} \
+break;
+
 void next_token() {
 top:
     token.start = stream;
@@ -419,11 +466,11 @@ top:
             while (isdigit(*stream)) {
                 stream++;
             }
-            if (*stream == '.' || tolower(*stream) == 'e') {
-                stream = token.start;
+            char c = *stream;
+            stream = token.start;
+            if (c == '.' || tolower(c) == 'e') {
                 scan_float();
             } else {
-                stream = token.start;
                 scan_int();
             }
             break;
@@ -441,12 +488,53 @@ top:
             token.kind = TOKEN_NAME;
             token.name = str_intern_range(token.start, stream);
             break;
+        case '<':
+            token.kind = *stream++;
+            if (*stream == '<') {
+                token.kind = TOKEN_LSHIFT;
+                stream++;\
+                if (*stream == '=') {
+                    token.kind = TOKEN_LSHIFT_ASSIGN;
+                    stream++;
+                }
+            } else if (*stream == '=') {
+                token.kind = TOKEN_LTEQ;
+                stream++;
+            }
+            break;
+        case '>':
+            token.kind = *stream++;
+            if (*stream == '>') {
+                token.kind = TOKEN_RSHIFT;
+                stream++;
+                if (*stream == '=') {
+                    token.kind = TOKEN_RSHIFT_ASSIGN;
+                    stream++;
+                }
+            } else if (*stream == '=') {
+                token.kind = TOKEN_GTEQ;
+                stream++;
+            }
+            break;
+        CASE1('^', '=', TOKEN_XOR_ASSIGN)
+        CASE1(':', '=', TOKEN_COLON_ASSIGN)
+        CASE1('/', '=', TOKEN_DIV_ASSIGN)
+        CASE1('*', '=', TOKEN_MUL_ASSIGN)
+        CASE1('%', '=', TOKEN_MOD_ASSIGN)
+        CASE2('+', '+', TOKEN_INC, '=', TOKEN_ADD_ASSIGN)
+        CASE2('-', '-', TOKEN_DEC, '=', TOKEN_SUB_ASSIGN)
+        CASE2('&', '=', TOKEN_AND_ASSIGN, '&', TOKEN_AND)
+        CASE2('|', '=', TOKEN_OR_ASSIGN, '|', TOKEN_OR)
+        
         default:
             token.kind = *stream++;
             break;
         }
         token.end = stream;
 }
+
+#undef CASE1
+#undef CASE2
 
 void init_stream(const char *str) {
     stream = str;
@@ -508,11 +596,15 @@ inline static bool expect_token(TokenKind kind) {
 
 void lex_test() {
     // Integer literal tests
-    init_stream("18446744073709551615 0xffffffffffffffff 0x12345 042 0b1111");
+    init_stream("0 18446744073709551615 0xffffffffffffffff 0x12345 042 0b1111");
+    assert_token_int(0);
     assert_token_int(18446744073709551615ull);
     assert_token_int(0xffffffffffffffffull);
+    assert(token.mod == TOKENMOD_HEX);
     assert_token_int(0x12345);
+    assert(token.mod == TOKENMOD_OCT);
     assert_token_int(042);
+    assert(token.mod == TOKENMOD_BIN);
     assert_token_int(0xF);
     assert_token_eof();
     
@@ -534,6 +626,18 @@ void lex_test() {
     init_stream("\"Foo\" \"a\\nb\"");
     assert_token_str("Foo");
     assert_token_str("a\nb");
+    assert_token_eof();
+    
+    init_stream(": := + += ++ < <= << <<=");
+    assert_token(':');
+    assert_token(TOKEN_COLON_ASSIGN);
+    assert_token('+');
+    assert_token(TOKEN_ADD_ASSIGN);
+    assert_token(TOKEN_INC);
+    assert_token('<');
+    assert_token(TOKEN_LTEQ);
+    assert_token(TOKEN_LSHIFT);
+    assert_token(TOKEN_LSHIFT_ASSIGN);
     assert_token_eof();
     
     // Generic tests
