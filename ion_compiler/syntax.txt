@@ -47,3 +47,84 @@ FLOAT =  [0-9]*[.][0-9]*([eE][+-]?[0-9]+)?
 INT = 0 | [1-9][0-9]* | 0[xX][0-9a-fA-F]+ | 0[1-7]+ | 0[bB][01]+
 CHAR = '\'' . '\''
 STR = '"' [^"]* '"'
+
+EBNF grammar:
+
+Declartions:
+
+name_list = NAME (',' NAME)*
+type_list = type (',' type)*
+
+base_type = NAME
+          | 'func' '(' type_list? ')' (':' type)?
+          | '(' base_type ')'
+
+type = base_type ('[' expr ']' | '*')*
+
+enum_item = NAME ('=' expr)?
+enum_items = enum_item (',' enum_item)* ','?
+enum_decl = NAME '{' enum_items? '}'
+
+
+aggregate_field = name_list ':' type ';'
+aggregate_decl = NAME '{' aggreagte_field* '}'
+
+var_decl = NAME '=' expr
+         | NAME ':' type ('=' expr)?
+
+const_decl = NAME '=' expr
+
+typedef_decl = NAME '=' type
+
+func_param = NAME ':' type
+func_paramter_list = func_param (',' func_param)*
+func_decl = NAME '(' func_parameter_list? ')' (':' type)? stat_block
+
+decl = 'enum' enum_decl
+     | 'struct' aggregate_decl
+     | 'union' aggregate_decl
+     | 'var' var_decl
+     | 'const const_decl
+     | 'typedef typedef_decl
+     | 'func' func_decl
+
+Statements:
+
+assign_op = '=' | COLON_ASSIGN | ADD_ASSIGN | ...
+
+switch_case = (CASE expr | DEFAULT) ':' stat*
+switch_block = '{' switch_case* '}'
+
+stat = 'return' expr
+     | 'if '(' expr ')' stat_block ('else' 'if' '(' expr ')' stat_block)* ('else' stat_block)?
+     | 'while' '('expr')' stat_block
+     | 'for' '(' stat_list ';' expr ';' stat_list ')' stat_block
+     | 'do' stat_block 'while' '(' expr ')' ';'
+     | '{' stat* '}'
+     | 'break' ';'
+     | 'continue' ';'
+     | switch '(' expr ')' switch_block
+     | expr (INC | DEC | assign_op expr)?
+
+typespec = NAME | '(' ':' type ')'
+
+operand_expr = INT
+             | FLOAT
+             | STR
+             | NAME
+             | typespec? '{' expr_list'}'
+             | CAST '(' expr ')'
+             | '(' expr ')'
+base_expr = operand_expr ('(' expr_list ') | '[' expr ']' | '.' NAME)*
+unary_expr = [+-&*] unary_expr
+           | base_expr
+mul_op = '*' | '\' | '%' | '&' | LSHIFT | RSHIFT
+mul_expr = unary_expr (mul_op unary_expr)*
+add_op = '+' | '-' | '|' | '^'
+add_expr = mul_expr ( add_op mul_expr)*
+cmp_op = EQ | NOTEQ | '<' | LTEQ | '<' | '<='
+cmp_expr = mul_expr (cmp_op mul_expr)*
+and_expr = cmp_expr (AND cmp_expr)*
+or_expr = and_expr (OR and_expr)*
+ternary_expr = or_expr ('?' ternary_expr ':' ternary_expr)?
+expr = ternary_expr

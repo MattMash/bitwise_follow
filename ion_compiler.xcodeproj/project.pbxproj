@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15ABE693223783E00001084F /* ion.c in Sources */ = {isa = PBXBuildFile; fileRef = 15ABE692223783E00001084F /* ion.c */; };
+		150BC72E225A626200CF6F2A /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 150BC72D225A626200CF6F2A /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,9 +23,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		150BC72B22422EBA00CF6F2A /* syntax.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = syntax.txt; path = ion_compiler/syntax.txt; sourceTree = "<group>"; };
+		150BC72B22422EBA00CF6F2A /* syntax.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = syntax.txt; sourceTree = "<group>"; };
+		150BC72D225A626200CF6F2A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		150BC732225A669C00CF6F2A /* lex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lex.c; sourceTree = "<group>"; };
+		150BC735225A6B7900CF6F2A /* ast.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ast.c; sourceTree = "<group>"; };
 		15ABE68F223783E00001084F /* ion_compiler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ion_compiler; sourceTree = BUILT_PRODUCTS_DIR; };
-		15ABE692223783E00001084F /* ion.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ion.c; sourceTree = "<group>"; };
+		15ABE692223783E00001084F /* common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,10 +42,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		150BC72F225A63C200CF6F2A /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Header Files";
+			sourceTree = "<group>";
+		};
+		150BC730225A63E600CF6F2A /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				15ABE692223783E00001084F /* common.c */,
+				150BC732225A669C00CF6F2A /* lex.c */,
+				150BC72D225A626200CF6F2A /* main.c */,
+				150BC735225A6B7900CF6F2A /* ast.c */,
+			);
+			path = "Source Files";
+			sourceTree = "<group>";
+		};
 		15ABE686223783E00001084F = {
 			isa = PBXGroup;
 			children = (
-				150BC72B22422EBA00CF6F2A /* syntax.txt */,
 				15ABE691223783E00001084F /* ion_compiler */,
 				15ABE690223783E00001084F /* Products */,
 			);
@@ -59,7 +79,9 @@
 		15ABE691223783E00001084F /* ion_compiler */ = {
 			isa = PBXGroup;
 			children = (
-				15ABE692223783E00001084F /* ion.c */,
+				150BC72B22422EBA00CF6F2A /* syntax.txt */,
+				150BC730225A63E600CF6F2A /* Source Files */,
+				150BC72F225A63C200CF6F2A /* Header Files */,
 			);
 			path = ion_compiler;
 			sourceTree = "<group>";
@@ -120,7 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15ABE693223783E00001084F /* ion.c in Sources */,
+				150BC72E225A626200CF6F2A /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +264,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"ion_compiler/Header\\ Files",
+					"ion_compiler/Source\\ Files",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -250,7 +277,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"ion_compiler/Header\\ Files",
+					"ion_compiler/Source\\ Files",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
